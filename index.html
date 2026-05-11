@@ -1049,20 +1049,30 @@ h1, h2, h3, .time-big, .program-title, .dresscode-title, .details-title {
             });
         }
         
-        // ========== КНОПКИ УПРАВЛЕНИЯ СПИСКОМ ==========
-        // Добавляем кнопки управления в правый нижний угол
-        const controlPanel = document.createElement('div');
-        controlPanel.style.cssText = 'position: fixed; bottom: 10px; right: 10px; z-index: 9999; display: flex; gap: 5px;';
-        controlPanel.innerHTML = `
-            <button id="sendFinalBtn" style="background: #011494; color: white; border: none; border-radius: 20px; padding: 5px 10px; font-size: 10px; cursor: pointer; font-family: inherit;">📤 Отправить список</button>
-            <button id="showListBtn" style="background: #B5D1E9; color: #011494; border: none; border-radius: 20px; padding: 5px 10px; font-size: 10px; cursor: pointer; font-family: inherit;">📋 Показать</button>
-            <button id="clearListBtn" style="background: #999; color: white; border: none; border-radius: 20px; padding: 5px 10px; font-size: 10px; cursor: pointer; font-family: inherit;">🗑 Очистить</button>
-        `;
-        document.body.appendChild(controlPanel);
-        
-        document.getElementById('sendFinalBtn')?.addEventListener('click', sendFinalList);
-        document.getElementById('showListBtn')?.addEventListener('click', showGuestsList);
-        document.getElementById('clearListBtn')?.addEventListener('click', clearGuestsList);
+        // ========== КНОПКИ УПРАВЛЕНИЯ СПИСКОМ (только для админа) ==========
+// Админ-режим включается добавлением ?admin=12345 в конец ссылки
+// Пример: https://olesa18.github.io/wedding-invite/?admin=12345
+
+const isAdmin = window.location.href.includes('?admin=12345');
+
+if (isAdmin) {
+    console.log('✅ Админ-режим активен. Кнопки управления отображаются.');
+    
+    const controlPanel = document.createElement('div');
+    controlPanel.style.cssText = 'position: fixed; bottom: 10px; right: 10px; z-index: 9999; display: flex; gap: 5px;';
+    controlPanel.innerHTML = `
+        <button id="sendFinalBtn" style="background: #011494; color: white; border: none; border-radius: 20px; padding: 8px 12px; font-size: 12px; cursor: pointer; font-family: inherit; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">📤 Отправить список</button>
+        <button id="showListBtn" style="background: #B5D1E9; color: #011494; border: none; border-radius: 20px; padding: 8px 12px; font-size: 12px; cursor: pointer; font-family: inherit; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">📋 Показать</button>
+        <button id="clearListBtn" style="background: #999; color: white; border: none; border-radius: 20px; padding: 8px 12px; font-size: 12px; cursor: pointer; font-family: inherit; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">🗑 Очистить</button>
+    `;
+    document.body.appendChild(controlPanel);
+    
+    document.getElementById('sendFinalBtn')?.addEventListener('click', sendFinalList);
+    document.getElementById('showListBtn')?.addEventListener('click', showGuestsList);
+    document.getElementById('clearListBtn')?.addEventListener('click', clearGuestsList);
+} else {
+    console.log('👤 Обычный режим. Кнопки управления скрыты.');
+}
         
         // ========== ДОПОЛНИТЕЛЬНО: блокировка двойного подтверждения ==========
         // Проверяем, не подтверждал ли гость уже сегодня (по IP не сделать, сделаем по имени)
